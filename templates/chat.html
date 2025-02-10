@@ -45,6 +45,11 @@
             align-items: center;
             gap: 10px;
         }
+        .msg-text {
+            font-family: var(--bs-body-font-family);
+            font-family: 500;
+            font-size: 15px;
+        }
     </style>
 </head>
 <body>
@@ -54,12 +59,12 @@
     
             <h2>{{ chat_name }}</h2>
         </div>
-        <div class="chat-box border p-3" style="max-height: 700px; overflow-y: scroll; background: #f5f5f5;">
+        <div id="chatbox" class="chat-box border p-3" style="max-height: 700px; overflow-y: scroll; background: #f5f5f5;">
             {% for msg in messages %}
                 <div class="mb-2 message">
                     <strong>{{ msg.sender }}</strong> <span class="text-muted">[{{ msg.date }} {{ msg.time }}]</span>
                     {% if msg.type == "text" %}
-                        <p>{{ msg.message }}</p>
+                        <pre class="msg-text">{{ msg.message }}</pre>
                     {% elif msg.type == "media" %}
                         <p><em>{{ msg.message }}</em></p>
                         {% set media_path = url_for('media', chat_name=chat_name, filename=msg.media_file) %}
@@ -77,50 +82,17 @@
         </div>
     </div>
 
-    <!-- <div class="container mt-4">
-        <h2>{{ chat_name }}</h2>
-        <div class="chat-box border p-3" style="max-height: 500px; overflow-y: scroll; background: #f5f5f5;">
-            {% for msg in messages %}
-                <div class="mb-2">
-                    <strong>{{ msg.sender }}</strong> <span class="text-muted">[{{ msg.date }} {{ msg.time }}]</span>
-                    {% if msg.type == "text" %}
-                        <p>{{ msg.message }}</p>
-                    {% elif msg.type == "media" %}
-                        <p><em>{{ msg.message }}</em></p>
-                    {% endif %}
-                </div>
-            {% endfor %}
-            
-            {% for media in media_files %}
-                <div class="mb-2">
-                    {% if media.endswith(".jpg") or media.endswith(".jpeg") or media.endswith(".png") or media.endswith(".gif") %}
-                        <img src="{{ url_for('media', chat_name=chat_name, filename=media) }}" class="media-item img-fluid" alt="Media">
-                    {% elif media.endswith(".pdf") %}
-                        <p><a href="{{ url_for('media', chat_name=chat_name, filename=media) }}" target="_blank">View PDF: {{ media }}</a></p>
-                        <embed src="{{ url_for('media', chat_name=chat_name, filename=media) }}" class="media-item " width="100%" height="400px" />
-                    {% else %}
-                        <p><a href="{{ url_for('media', chat_name=chat_name, filename=media) }}" download>{{ media }}</a></p>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        </div>
-    </div> -->
-    <!-- <div class="container chat-container">
-        <h4 class="text-center">{{ chat_name }}</h4>
-        <div class="d-flex flex-column">
-            {% for msg in messages %}
-                <div class="message {% if loop.index % 2 == 0 %}sent{% else %}received{% endif %}">
-                    <strong>{{ msg.sender }}</strong> <small>({{ msg.time }})</small><br>
-                    {% if msg.type == "text" %}
-                        {{ msg.message }}
-                    {% elif msg.type == "media" %}
-                        <br>
-                        <img src="{{ url_for('media', chat_name=chat_name, filename=msg.message) }}" class="media">
-                    {% endif %}
-                </div>
-            {% endfor %}
-        </div>
-    </div> -->
+    <script>
+        function scrollToBottom() {
+            var chatbox = document.getElementById("chatbox");
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        // Scroll to bottom when page loads
+        window.onload = function() {
+            scrollToBottom();
+        };
+    </script>
 </body>
 </html>
 

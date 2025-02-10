@@ -21,19 +21,21 @@ def parse_chat(file_path, media_path):
         clean_line = line.strip().replace("\u200e", "")
         message_match = MESSAGE_PATTERN.match(clean_line)
         media_match = MEDIA_PATTERN.findall(f"{clean_line}")
-
-        if media_match:
-            date, time, sender, message, media_file = media_match[0]
-            messages.append({
-                "date": date, "time": time, "sender": sender, "message": message, "type": "media",
-                "media_file": media_file.strip()
-            })
-        elif message_match:
-            date, time, sender, message = message_match.groups()
-            messages.append({
-                "date": date, "time": time, "sender": sender, "message": message, "type": "text"
-            })
-    
+        if (not clean_line.startswith("[")):
+            messages[-1]['message'] = f"{messages[-1]['message']}\n{clean_line}"
+        else:
+            if media_match:
+                date, time, sender, message, media_file = media_match[0]
+                messages.append({
+                    "date": date, "time": time, "sender": sender, "message": message, "type": "media",
+                    "media_file": media_file.strip()
+                })
+            elif message_match:
+                date, time, sender, message = message_match.groups()
+                messages.append({
+                    "date": date, "time": time, "sender": sender, "message": message, "type": "text"
+                })
+        
     return messages
 
 

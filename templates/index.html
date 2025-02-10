@@ -61,7 +61,8 @@
             console.log(e.target.files[0]);
 
             formData.append("chatZip", e.target.files[0]);
-
+            console.log('loading');
+            
             fetch("/upload", {
               method: "POST",
               body: formData,
